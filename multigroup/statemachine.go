@@ -23,8 +23,8 @@ import (
 	"github.com/lni/dragonboat/statemachine"
 )
 
-// ExampleStateMachine is the IStateMachine implementation used in the
-// helloworld example.
+// ExampleStateMachine is the IStateMachine implementation used in the example
+// for handling all inputs not ends with "?".
 // See https://github.com/lni/dragonboat/blob/master/statemachine/rsm.go for
 // more details of the IStateMachine interface.
 type ExampleStateMachine struct {
@@ -54,7 +54,7 @@ func (s *ExampleStateMachine) Lookup(query []byte) []byte {
 
 // Update updates the object using the specified committed raft entry.
 func (s *ExampleStateMachine) Update(data []byte) uint64 {
-	// in this example, we print out the following hello world message for each
+	// in this example, we print out the following message for each
 	// incoming update request. we also increase the counter by one to remember
 	// how many updates we have applied
 	s.Count++
