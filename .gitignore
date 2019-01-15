@@ -4,3 +4,4 @@ example-data
 cpphelloworld/cpphelloworld
 *.o
 *.so
+/.vscode/settings.json
