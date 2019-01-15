@@ -37,6 +37,7 @@ import (
 	"github.com/lni/dragonboat/logger"
 )
 
+//TODO: Cluster ID Array to facilitate dynamic cluster creation
 const (
 	// we use two raft groups in this example, they are identified by the cluster
 	// ID values below
@@ -44,6 +45,7 @@ const (
 	clusterID2 uint64 = 101
 )
 
+//TODO: NodeAddress Array to facilitate dynamic changes to cluster's membership
 var (
 	// initial nodes count is three, their addresses are also fixed
 	// this is for simplicity
@@ -60,7 +62,7 @@ func main() {
 	if *nodeID > 3 || *nodeID < 1 {
 		fmt.Fprintf(os.Stderr, "invalid nodeid %d, it must be 1, 2 or 3", *nodeID)
 		os.Exit(1)
-	}
+	} //TODO: Eliminate this condition checking to allow more than 3 nodes in a raft cluster
 	// https://github.com/golang/go/issues/17393
 	if runtime.GOOS == "darwin" {
 		signal.Ignore(syscall.Signal(0xd))
@@ -80,6 +82,7 @@ func main() {
 	logger.GetLogger("grpc").SetLevel(logger.WARNING)
 	// config for raft
 	// note the ClusterID value is not specified here
+	//TODO: Allow customization of the numerical attributes through setters
 	rc := config.Config{
 		NodeID:             uint64(*nodeID),
 		ElectionRTT:        5,
@@ -88,6 +91,7 @@ func main() {
 		SnapshotEntries:    10,
 		CompactionOverhead: 5,
 	}
+	//TODO: Migrate the folder to goenv.HOME/.multigroup-data
 	datadir := filepath.Join(
 		"example-data",
 		"multigroup-data",
@@ -119,6 +123,7 @@ func main() {
 	// start the first cluster
 	// we use ExampleStateMachine as the IStateMachine for this cluster, its
 	// behaviour is identical to the one used in the Hello World example.
+	//TODO: Automate the creation of clusters. Tagged to to-dos at L#40 & L#48
 	rc.ClusterID = clusterID1
 	if err := nh.StartCluster(peers, false, NewExampleStateMachine, rc); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to add cluster, %v\n", err)
@@ -126,6 +131,7 @@ func main() {
 	}
 	// start the second cluster
 	// we use SecondStateMachine as the IStateMachine for the second cluster
+	//TODO: Automate the creation of clusters. Tagged to to-dos at L#40 & L#48
 	rc.ClusterID = clusterID2
 	if err := nh.StartCluster(peers, false, NewSecondStateMachine, rc); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to add cluster, %v\n", err)
@@ -166,6 +172,7 @@ func main() {
 				// remove the \n char
 				msg := strings.Replace(strings.TrimSpace(v), "\n", "", 1)
 				var err error
+				//TODO: Redefine the criteria to redirect the client requests with new mechanisms (?)
 				if strings.HasSuffix(msg, "?") {
 					// user message ends with "?", make a proposal to update the second
 					// raft group
